@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vet/login.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 List<String> list = <String>[
   'Choose',
@@ -313,10 +314,28 @@ class _ProfileState extends State<Profile> {
                               child: Align(
                                 alignment: Alignment.topCenter,
                                 child: InkWell(
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                        context: context,
-                                        builder: (builder) => bottomSheet());
+                                  onTap: () async {
+                                    PermissionStatus cameraStatus =
+                                        await Permission.camera.request();
+                                    PermissionStatus storageStatus =
+                                        await Permission.storage.request();
+                                    if (cameraStatus ==
+                                            PermissionStatus.granted &&
+                                        storageStatus ==
+                                            PermissionStatus.granted) {
+                                      showModalBottomSheet(
+                                          context: context,
+                                          builder: (builder) => bottomSheet());
+                                    } else if (cameraStatus ==
+                                        PermissionStatus.denied) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                              content: Text(
+                                                  "This permission is recommended")));
+                                    }
+                                    // showModalBottomSheet(
+                                    //     context: context,
+                                    //     builder: (builder) => bottomSheet());
                                   },
                                   child: CircleAvatar(
                                     radius: 50,

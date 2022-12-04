@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'profile.dart';
 import 'maps.dart';
+import 'package:permission_handler/permission_handler.dart';
+//import 'package:location/location.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -9,6 +11,17 @@ class Login extends StatefulWidget {
   @override
   State<Login> createState() => _LoginState();
 }
+
+// enum PermissionGroup {
+
+//   /// Android: Fine and Coarse Location
+//   /// iOS: CoreLocation - Always
+//   locationAlways,
+
+//   /// Android: Fine and Coarse Location
+//   /// iOS: CoreLocation - WhenInUse
+//   locationWhenInUse
+// }
 
 String username = "Harun";
 // DateTime newDate = DateTime.now();
@@ -21,7 +34,7 @@ String username = "Harun";
 //         : false;
 
 bool isMorning = true;
-String isDayTime = isMorning ? 'Good Morning!' : 'Good Night!';
+//String isDayTime = isMorning ? 'Good Morning!' : 'Good Night!';
 Profile profile = Profile();
 String night = "Good Night!";
 String morning = "Good Morning!";
@@ -30,8 +43,6 @@ int timestamp = DateTime.now().hour;
 class _LoginState extends State<Login> {
   @override
   void initState() {
-    // TODO: implement initState
-
     super.initState();
   }
 
@@ -91,7 +102,21 @@ class _LoginState extends State<Login> {
                         Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              "Join our Pet Lover Community",
+                              "Join our Pet Lover",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  letterSpacing: 0.5,
+                                  color: Colors.white),
+                              textAlign: TextAlign.center,
+                            )),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              "Community",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
@@ -169,7 +194,9 @@ class _LoginState extends State<Login> {
                         width: 40,
                       ),
                       FloatingActionButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/reminder');
+                        },
                         child: Icon(Icons.info),
                         backgroundColor: Colors.orange[400],
                         heroTag: null,
@@ -204,7 +231,7 @@ class _LoginState extends State<Login> {
                 Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
-                  color: Colors.orange[400],
+                  color: Colors.orange[100],
                   margin: EdgeInsets.fromLTRB(60, 10, 60, 0),
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(13, 30, 10, 30),
@@ -218,7 +245,7 @@ class _LoginState extends State<Login> {
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
                                   letterSpacing: 0.5,
-                                  color: Colors.white),
+                                  color: Colors.black),
                               textAlign: TextAlign.center,
                             )),
                         SizedBox(
@@ -232,8 +259,19 @@ class _LoginState extends State<Login> {
                                 foregroundColor: Colors.black,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20))),
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/maps');
+                            onPressed: () async {
+                              // Navigator.pushNamed(context, '/maps');
+                              PermissionStatus locationStatus =
+                                  await Permission.location.request();
+                              if (locationStatus == PermissionStatus.granted) {
+                                mapUtils.openMap("Veteriner");
+                              } else if (locationStatus ==
+                                  PermissionStatus.denied) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            "This permission is recommended")));
+                              }
                             },
                             child: Text("Show on Maps"),
                           ),

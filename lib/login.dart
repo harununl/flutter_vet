@@ -34,7 +34,7 @@ String username = "Harun";
 //         : false;
 
 bool isMorning = true;
-//String isDayTime = isMorning ? 'Good Morning!' : 'Good Night!';
+String isDayTime = isMorning ? 'Good Morning!' : 'Good Night!';
 Profile profile = Profile();
 String night = "Good Night!";
 String morning = "Good Morning!";
@@ -84,8 +84,9 @@ class _LoginState extends State<Login> {
                   padding: const EdgeInsets.only(left: 10),
                   child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text(
-                          (timestamp + 3) > 18 ? '${night}' : '${morning}')),
+                      child: Text((timestamp + 3) > 18 && (timestamp + 3) < 7
+                          ? '${night}'
+                          : '${morning}')),
                 ),
                 SizedBox(
                   height: 20,

@@ -3,7 +3,9 @@ import 'package:intl/intl.dart';
 import 'profile.dart';
 import 'maps.dart';
 import 'package:permission_handler/permission_handler.dart';
+
 //import 'package:location/location.dart';
+var bos;
 
 class Login extends StatefulWidget {
   const Login({super.key});

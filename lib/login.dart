@@ -14,27 +14,10 @@ class Login extends StatefulWidget {
   State<Login> createState() => _LoginState();
 }
 
-// enum PermissionGroup {
-
-//   /// Android: Fine and Coarse Location
-//   /// iOS: CoreLocation - Always
-//   locationAlways,
-
-//   /// Android: Fine and Coarse Location
-//   /// iOS: CoreLocation - WhenInUse
-//   locationWhenInUse
-// }
-
 String username = "Harun";
-// DateTime newDate = DateTime.now();
-// DateTime now = DateTime.now();
-// String formattedTime = DateFormat.Hms().format(DateTime.now());
-// // dynamic currentTime = DateFormat.jm().format(DateTime.now().hour);
-// bool isMorning =
-//     int.parse(formattedTime) > 6 && int.parse(formattedTime) < 20.00
-//         ? true
-//         : false;
 
+//DateTime dateTime = DateTime.now();
+List<String> _availableTimezones = <String>[];
 bool isMorning = true;
 String isDayTime = isMorning ? 'Good Morning!' : 'Good Night!';
 Profile profile = Profile();
@@ -86,9 +69,8 @@ class _LoginState extends State<Login> {
                   padding: const EdgeInsets.only(left: 10),
                   child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text((timestamp + 3) > 18 && (timestamp + 3) < 7
-                          ? '${night}'
-                          : '${morning}')),
+                      child: Text(
+                          (timestamp + 3) > 18 ? '${night}' : '${morning}')),
                 ),
                 SizedBox(
                   height: 20,
@@ -208,7 +190,7 @@ class _LoginState extends State<Login> {
                         width: 40,
                       ),
                       FloatingActionButton(
-                        onPressed: () {},
+                        onPressed: () async {},
                         child: Icon(Icons.sick),
                         backgroundColor: Colors.orange[400],
                         heroTag: null,

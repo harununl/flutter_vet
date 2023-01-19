@@ -196,6 +196,20 @@ const List<String> list = <String>[
   'Yorkshire Terrier',
 ];
 
+class choose {
+  String value;
+
+  choose({
+    required this.value,
+  });
+
+  // factory TestParse.fromJson(Map<String, dynamic> json) {
+  //   return TestParse(
+  //     title: json['script'],
+  //   );
+  // }
+}
+
 void main() => runApp(const DropdownButtonApp());
 
 class DropdownButtonApp extends StatelessWidget {
@@ -220,7 +234,9 @@ class DropdownButtonApp extends StatelessWidget {
           height: 20,
         ),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, '/api');
+          },
           child: Container(
             color: Colors.green,
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
@@ -235,8 +251,10 @@ class DropdownButtonApp extends StatelessWidget {
   }
 }
 
+choose newValue = choose(value: "");
+
 class DropdownButtonExample extends StatefulWidget {
-  const DropdownButtonExample({super.key});
+  DropdownButtonExample({super.key});
 
   @override
   State<DropdownButtonExample> createState() => _DropdownButtonExampleState();
@@ -260,6 +278,7 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
         // This is called when the user selects an item.
         setState(() {
           dropdownValue = value!;
+          newValue.value = dropdownValue;
         });
       },
       items: list.map<DropdownMenuItem<String>>((String value) {

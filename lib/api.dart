@@ -10,9 +10,10 @@ import 'dart:convert';
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
+import 'choose.dart';
 
 Future<String> excuteSample() async {
-  String value = "american-english-coonhound";
+  String value = newValue.value;
   var url = Uri.parse('https://www.purina.com/dogs/dog-breeds/$value');
   var response = await http.get(url);
 

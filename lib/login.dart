@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'profile.dart';
 import 'maps.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'api.dart';
 
 //import 'package:location/location.dart';
 var bos;
@@ -70,7 +71,7 @@ class _LoginState extends State<Login> {
                   child: Align(
                       alignment: Alignment.topLeft,
                       child: Text(
-                          (timestamp + 3) > 18 ? '${night}' : '${morning}')),
+                          (timestamp + 6) > 18 ? '${night}' : '${morning}')),
                 ),
                 SizedBox(
                   height: 20,
@@ -161,7 +162,9 @@ class _LoginState extends State<Login> {
                   child: Row(
                     children: [
                       FloatingActionButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/choose');
+                        },
                         child: Icon(Icons.pets),
                         backgroundColor: Colors.orange[400],
                         heroTag: null,
@@ -249,7 +252,7 @@ class _LoginState extends State<Login> {
                               PermissionStatus locationStatus =
                                   await Permission.location.request();
                               if (locationStatus == PermissionStatus.granted) {
-                                mapUtils.openMap("Veteriner");
+                                mapUtils.openMap("veteriner");
                               } else if (locationStatus ==
                                   PermissionStatus.denied) {
                                 ScaffoldMessenger.of(context).showSnackBar(

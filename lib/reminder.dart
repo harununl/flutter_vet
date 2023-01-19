@@ -242,24 +242,19 @@ class _reminderState extends State<reminder> {
                             content: NotificationContent(
                                 id: 10,
                                 channelKey: 'basic_channel',
-                                title: 'Cat Vaccine',
+                                title: 'Vet app reminds you!!',
                                 body: toDoController.text,
                                 actionType: ActionType.Default),
                             schedule: NotificationCalendar(
-                                hour: int.parse(_startTime.split(":")[0]),
-                                minute: int.parse(
-                                    _startTime.split(":")[1].split(" ")[0]),
-                                day: int.parse(dateTimeString),
-                                repeats: true));
+                              hour: int.parse(_startTime.split(":")[0]),
+                              minute: int.parse(
+                                  _startTime.split(":")[1].split(" ")[0]),
+                              day: int.parse(dateTimeString),
+                            ));
 
                         addToDoItem(toDoController.text);
                       }
                     });
-
-                    AndroidAlarmManager.oneShot(
-                        Duration(seconds: 1), alarmId, fireAlarm);
-
-                    //print("your alarm has been set");
                   },
                   child: Text("Create Reminder"),
                 ),
@@ -286,10 +281,6 @@ class _reminderState extends State<reminder> {
           todoText: toDo));
     });
     toDoController.clear();
-  }
-
-  void fireAlarm() {
-    print('alarm fired at${DateTime.now()}');
   }
 
   getTimeFromUser({required bool isStartTime}) async {

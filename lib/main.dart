@@ -1,6 +1,7 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter_vet/api.dart';
 import 'package:flutter_vet/login.dart';
 import 'package:flutter_vet/maps.dart';
 import 'package:flutter_vet/profile.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_vet/reminder.dart';
 import 'maps.dart';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'switch.dart';
+import 'choose.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +39,8 @@ void main() async {
       '/profile': (context) => Profile(),
       '/reminder': (context) => reminder(),
       '/MyApp': (context) => MyApp(),
+      '/api': (context) => webApi(),
+      '/choose': (context) => DropdownButtonApp(),
     },
   ));
 

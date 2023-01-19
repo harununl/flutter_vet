@@ -13,7 +13,9 @@ import 'package:dio/dio.dart';
 import 'choose.dart';
 
 Future<String> excuteSample() async {
-  String value = newValue.value;
+  String split = newValue.value;
+
+  String value = split.replaceAll(' ', '-');
   var url = Uri.parse('https://www.purina.com/dogs/dog-breeds/$value');
   var response = await http.get(url);
 
@@ -32,7 +34,7 @@ Future<String> excuteSample() async {
   } else {
     // If the server did not return a 200 OK response,
     // then throw an exception.
-    throw Exception('Failed to load album');
+    throw Exception('Failed to load selected pet');
   }
 }
 

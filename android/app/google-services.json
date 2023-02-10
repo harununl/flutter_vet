@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "631723353542",
+    "project_id": "veteriner-53e97",
+    "storage_bucket": "veteriner-53e97.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:631723353542:android:f3a4e698322e0014213ec7",
+        "android_client_info": {
+          "package_name": "com.example.flutter_vet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "631723353542-s3i3dkhs05a14hagmsh329uilmv8g892.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYJFBZ3Em_xRV1GQEhj9xN0RDBTI_MSkE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "631723353542-s3i3dkhs05a14hagmsh329uilmv8g892.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

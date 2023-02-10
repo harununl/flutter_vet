@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:isolate';
 
+import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_vet/toDo.dart';
 import 'package:flutter_vet/todoItem.dart';
@@ -21,7 +22,7 @@ class _reminderState extends State<reminder> {
   String selectedRepeat = "None";
   List<String> repeatList = ["Daily", "Weekly", "Monthly"];
   List<int> remindList = [5, 10, 15, 20];
-  final todosList = ToDo.todoList();
+  var todosList = ToDo.todoList();
   final toDoController = TextEditingController();
   int alarmId = 1;
   bool isOn = false;
@@ -53,7 +54,7 @@ class _reminderState extends State<reminder> {
           child: Icon(Icons.add),
           backgroundColor: Colors.orange[400],
         ),
-        body: Column(
+        body: ListView(
           children: [
             Container(
               margin: EdgeInsets.only(left: 10, top: 10),
@@ -80,6 +81,9 @@ class _reminderState extends State<reminder> {
         ));
   }
 
+  //Queue<dynamic> notify = new Queue<dynamic>();
+  //List<dynamic> notify = <dynamic>[];
+  int idd = DateTime.now().hashCode;
   Widget bottomSheet() {
     return ListView(
       children: [
@@ -230,8 +234,8 @@ class _reminderState extends State<reminder> {
                 alignment: Alignment.center,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      primary: Colors.white,
-                      foregroundColor: Colors.black,
+                      primary: Colors.orange,
+                      foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20))),
                   onPressed: () {
@@ -240,7 +244,7 @@ class _reminderState extends State<reminder> {
                         var dateTimeString = birthDateInString;
                         AwesomeNotifications().createNotification(
                             content: NotificationContent(
-                                id: 10,
+                                id: idd,
                                 channelKey: 'basic_channel',
                                 title: 'Vet app reminds you!!',
                                 body: toDoController.text,
@@ -270,11 +274,12 @@ class _reminderState extends State<reminder> {
     setState(() {
       if (toDo.isDone = !toDo.isDone) {
         todosList.removeWhere((item) => item.id == id);
+        AwesomeNotifications().cancel(idd);
       }
     });
   }
 
-  void addToDoItem(String toDo) {
+  dynamic addToDoItem(String toDo) {
     setState(() {
       todosList.add(ToDo(
           id: DateTime.now().millisecondsSinceEpoch.toString(),

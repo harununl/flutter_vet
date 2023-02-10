@@ -1,8 +1,9 @@
 import 'dart:ui';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:flutter_vet/Vet/vet.dart';
 import 'package:path_provider/path_provider.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vet/login.dart';
 import 'package:image_picker/image_picker.dart';
@@ -268,9 +269,9 @@ class _ProfileState extends State<Profile> {
   bool isChecked = false;
   bool isCheckedd = false;
   String? valuee;
-
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   File? image;
-
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final ImagePicker _picker = ImagePicker();
   PickedFile? _imageFile;
   String? value;
@@ -281,13 +282,54 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
         title: Text(
           "Profile",
           style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.orange[400],
+        centerTitle: true,
+        backgroundColor: Colors.orange,
         elevation: 0,
+        actions: [
+          Builder(
+            builder: (context) => IconButton(
+                onPressed: () {
+                  setState(() {
+                    showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        title: const Text('Çıkış Yapmak İstiyor Musunuz?'),
+                        //content: const Text('AlertDialog description'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'Hayır'),
+                            child: const Text('Hayır'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              _auth.signOut();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content:
+                                          Text('Başarıyla çıkış yaptınız..')));
+
+                              Navigator.pushReplacement<void, void>(
+                                context,
+                                MaterialPageRoute<void>(
+                                  builder: (BuildContext context) =>
+                                      const vetPage(),
+                                ),
+                              );
+                            },
+                            child: const Text('Evet'),
+                          ),
+                        ],
+                      ),
+                    );
+                  });
+                },
+                icon: Icon(Icons.login)),
+          )
+        ],
       ),
       body: ListView(
         children: [
@@ -303,243 +345,104 @@ class _ProfileState extends State<Profile> {
                       fit: BoxFit.fitWidth,
                     ),
                   ),
-                  Column(
-                    children: [
-                      Center(
-                        child: Stack(
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              margin: EdgeInsets.only(top: 140),
-                              child: Align(
-                                alignment: Alignment.topCenter,
-                                child: InkWell(
-                                  onTap: () async {
-                                    PermissionStatus cameraStatus =
-                                        await Permission.camera.request();
-                                    PermissionStatus storageStatus =
-                                        await Permission.storage.request();
-                                    if (cameraStatus ==
-                                            PermissionStatus.granted &&
-                                        storageStatus ==
-                                            PermissionStatus.granted) {
-                                      showModalBottomSheet(
-                                          context: context,
-                                          builder: (builder) => bottomSheet());
-                                    } else if (cameraStatus ==
-                                        PermissionStatus.denied) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                              content: Text(
-                                                  "This permission is recommended")));
-                                    }
-                                    // showModalBottomSheet(
-                                    //     context: context,
-                                    //     builder: (builder) => bottomSheet());
-                                  },
-                                  child: CircleAvatar(
-                                    radius: 50,
-                                    child: image != null
-                                        ? ClipOval(
-                                            child: Image.file(
-                                              image!,
-                                              width: 160,
-                                              height: 160,
-                                              fit: BoxFit.cover,
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        Center(
+                          child: Stack(
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.width,
+                                margin: EdgeInsets.only(top: 140),
+                                child: Align(
+                                  alignment: Alignment.topCenter,
+                                  child: InkWell(
+                                    onTap: () async {
+                                      PermissionStatus cameraStatus =
+                                          await Permission.camera.request();
+                                      PermissionStatus storageStatus =
+                                          await Permission.storage.request();
+                                      if (cameraStatus ==
+                                              PermissionStatus.granted &&
+                                          storageStatus ==
+                                              PermissionStatus.granted) {
+                                        showModalBottomSheet(
+                                            context: context,
+                                            builder: (builder) =>
+                                                bottomSheet());
+                                      } else if (cameraStatus ==
+                                          PermissionStatus.denied) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                                content: Text(
+                                                    "This permission is recommended")));
+                                      }
+                                      // showModalBottomSheet(
+                                      //     context: context,
+                                      //     builder: (builder) => bottomSheet());
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 50,
+                                      child: image != null
+                                          ? ClipOval(
+                                              child: Image.file(
+                                                image!,
+                                                width: 160,
+                                                height: 160,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            )
+                                          : ClipOval(
+                                              child: Image.asset(
+                                                'assets/prof.png',
+                                              ),
                                             ),
-                                          )
-                                        : ClipOval(
-                                            child: Image.asset(
-                                              'assets/prof.png',
-                                            ),
-                                          ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            // Positioned(
-                            //     bottom: 0,
-                            //     right: 155,
-                            //     child: InkWell(
-                            //       onTap: () {
-                            //         showModalBottomSheet(
-                            //             context: context,
-                            //             builder: (builder) => bottomSheet());
-                            //       },
-                            //       child: Icon(
-                            //         Icons.camera_alt,
-                            //         size: 20,
-                            //       ),
-                            //     )),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 25, top: 10),
-                        child: TextFormField(
-                          controller: _nameController,
-                          decoration: const InputDecoration(
-                              border:
-                                  OutlineInputBorder(borderSide: BorderSide()),
-                              icon: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Icon(
-                                  Icons.people,
-                                  color: Colors.black,
+                        Padding(
+                          padding: const EdgeInsets.only(right: 25, top: 10),
+                          child: TextFormField(
+                            controller: _nameController,
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide()),
+                                icon: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.people,
+                                    color: Colors.black,
+                                  ),
                                 ),
-                              ),
-                              labelText: 'Enter your Name',
-                              labelStyle: TextStyle(
-                                color: Colors.black,
-                              )),
-                          validator: (val) {
-                            if (val == null || val.isEmpty) {
-                              return "Please type a Name";
-                            }
-                            return null;
-                          },
+                                labelText: 'Enter your Name',
+                                labelStyle: TextStyle(
+                                  color: Colors.black,
+                                )),
+                            validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return "Please type a Name";
+                              }
+                              return null;
+                            },
+                          ),
                         ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: EdgeInsets.only(left: 25, top: 10),
-                        child: Row(
-                          children: [
-                            Text(
-                              "Date of birth: ",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 15),
-                            ),
-                            Container(
-                              //width: MediaQuery.of(context).size.width,
-                              margin: const EdgeInsets.all(15.0),
-                              padding: const EdgeInsets.all(10.0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.orange, spreadRadius: 3),
-                                ],
-                              ),
-                              child: Text(
-                                "${birthDateInString}",
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.only(left: 25, top: 10),
+                          child: Row(
+                            children: [
+                              Text(
+                                "Date of birth: ",
                                 style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold, fontSize: 15),
                               ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            GestureDetector(
-                                child: new Icon(Icons.calendar_today),
-                                onTap: () async {
-                                  final datePick = await showDatePicker(
-                                      context: context,
-                                      initialDate: new DateTime.now(),
-                                      firstDate: new DateTime(1900),
-                                      lastDate: new DateTime(2100));
-                                  if (datePick != null &&
-                                      datePick != birthDate) {
-                                    setState(() {
-                                      birthDate = datePick;
-                                      isDateSelected = true;
-
-                                      // put it here
-                                      birthDateInString =
-                                          "${birthDate!.month}/${birthDate!.day}/${birthDate!.year}"; // 08/14/2019
-                                    });
-                                  }
-                                }),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: EdgeInsets.only(left: 20),
-                        child: Row(
-                          children: [
-                            Text(
-                              "Select your pet: ",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 15),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Checkbox(
-                              activeColor: Colors.white,
-                              checkColor: Colors.grey[800],
-                              value: isChecked,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  isChecked = value!;
-                                  if (isChecked == true) {
-                                    showModalBottomSheet(
-                                        context: context,
-                                        builder: (builder) => dropdown());
-                                  }
-                                });
-                              }),
-                          Text(
-                            "Cat: ",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1.0),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          if (isChecked == true)
-                            Container(
-                              margin: const EdgeInsets.all(15.0),
-                              padding: const EdgeInsets.all(10.0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.orange, spreadRadius: 3),
-                                ],
-                              ),
-                              child: Text("${catValue}"),
-                              foregroundDecoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                            )
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Checkbox(
-                              activeColor: Colors.white,
-                              checkColor: Colors.grey[800],
-                              value: isCheckedd,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  isCheckedd = value!;
-                                  if (isCheckedd == true) {
-                                    showModalBottomSheet(
-                                        context: context,
-                                        builder: (builder) => dropdownDog());
-                                  }
-                                });
-                              }),
-                          Text(
-                            "Dog: ",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1.0),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          if (isCheckedd == true)
-                            Container(
+                              Container(
+                                //width: MediaQuery.of(context).size.width,
                                 margin: const EdgeInsets.all(15.0),
                                 padding: const EdgeInsets.all(10.0),
                                 decoration: BoxDecoration(
@@ -550,32 +453,183 @@ class _ProfileState extends State<Profile> {
                                         color: Colors.orange, spreadRadius: 3),
                                   ],
                                 ),
-                                child: Text("${dogValue}"))
-                        ],
-                      ),
+                                child: Text(
+                                  "${birthDateInString}",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              GestureDetector(
+                                  child: new Icon(Icons.calendar_today),
+                                  onTap: () async {
+                                    final datePick = await showDatePicker(
+                                        context: context,
+                                        initialDate: new DateTime.now(),
+                                        firstDate: new DateTime(1900),
+                                        lastDate: new DateTime(2100));
+                                    if (datePick != null &&
+                                        datePick != birthDate) {
+                                      setState(() {
+                                        birthDate = datePick;
+                                        isDateSelected = true;
 
-                      //width: double.infinity,
-                      ButtonTheme(
-                        minWidth: 200,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 25),
-                          child: MaterialButton(
-                            onPressed: () {},
-                            height: 60,
-                            color: Colors.orange[400],
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(40)),
-                            child: Text(
-                              "Edit Profile",
+                                        // put it here
+                                        birthDateInString =
+                                            "${birthDate!.month}/${birthDate!.day}/${birthDate!.year}"; // 08/14/2019
+                                      });
+                                    }
+                                  }),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.only(left: 20),
+                          child: Row(
+                            children: [
+                              Text(
+                                "Select your pet: ",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Checkbox(
+                                activeColor: Colors.white,
+                                checkColor: Colors.grey[800],
+                                value: isChecked,
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    isChecked = value!;
+                                    if (isChecked == true) {
+                                      showModalBottomSheet(
+                                          context: context,
+                                          builder: (builder) => dropdown());
+                                    }
+                                  });
+                                }),
+                            Text(
+                              "Cat: ",
                               style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.0),
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            if (isChecked == true)
+                              Container(
+                                margin: const EdgeInsets.all(15.0),
+                                padding: const EdgeInsets.all(10.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
                                   color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.orange, spreadRadius: 3),
+                                  ],
+                                ),
+                                child: Text("${catValue}"),
+                                foregroundDecoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Checkbox(
+                                activeColor: Colors.white,
+                                checkColor: Colors.grey[800],
+                                value: isCheckedd,
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    isCheckedd = value!;
+                                    if (isCheckedd == true) {
+                                      showModalBottomSheet(
+                                          context: context,
+                                          builder: (builder) => dropdownDog());
+                                    }
+                                  });
+                                }),
+                            Text(
+                              "Dog: ",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.0),
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            if (isCheckedd == true)
+                              Container(
+                                  margin: const EdgeInsets.all(15.0),
+                                  padding: const EdgeInsets.all(10.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.orange,
+                                          spreadRadius: 3),
+                                    ],
+                                  ),
+                                  child: Text("${dogValue}"))
+                          ],
+                        ),
+                        SizedBox(height: 100),
+
+                        //width: double.infinity,
+                        ButtonTheme(
+                          minWidth: 200,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 25),
+                            child: MaterialButton(
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                      title: const Text(
+                                          'Bilgileriniz Kaydedilmiştir'),
+                                      //content: const Text('AlertDialog description'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, 'OK'),
+                                          child: const Text('OK'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                              },
+                              height: 60,
+                              color: Colors.orange[400],
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(40)),
+                              child: Text(
+                                "Edit Profile",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -714,12 +768,4 @@ class _ProfileState extends State<Profile> {
       print("failed: $e");
     }
   }
-
-  //basename(String imagePath) {}
-  // Future<File> saveImagePermanently(String imagePath) async {
-  //   final directory = await getApplicationDocumentsDirectory();
-  //   // final name = basename(imagePath);
-  //   final image = File('${directory.path}');
-  //   return File(imagePath).copy(image.path);
-  // }
 }

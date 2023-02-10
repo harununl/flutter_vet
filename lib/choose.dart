@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -7,7 +5,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
 
 const List<String> list = <String>[
-  'Choose',
+  "Choose",
   'Affenpinscher',
   'Afghan Hound',
   'Airedale Terrier',
@@ -65,7 +63,7 @@ const List<String> list = <String>[
   'Chinese Shar-Pei',
   'Chinook',
   'Chow Chow',
-  'Cirneco dell’Etna',
+  'Cirneco dell Etna',
   'Clumber Spaniel',
   'Cocker Spaniel',
   'Collie',
@@ -195,26 +193,88 @@ const List<String> list = <String>[
   'Xoloitzcuintli',
   'Yorkshire Terrier',
 ];
+////*urlye göre kedi isimlerini düzenle
+List<String> catList = <String>[
+  "Choose",
+  'Abyssinian',
+  'American Bobtail',
+  'American Curl',
+  'American Shorthair',
+  'American Wirehair',
+  'Balinese-Javanese',
+  'Bengal Cat',
+  'Birman Cat Breed',
+  'Bombay',
+  'British Shorthair',
+  'Burmese',
+  'Chartreux',
+  'Cornish Rex',
+  'Devon Rex',
+  'Egyptian Mau',
+  'European Burmese',
+  'Exotic Shorthair',
+  'Havana Brown',
+  'Himalayan',
+  'Japanese Bobtail',
+  'Korat',
+  'LaPerm',
+  'Maine Coon',
+  'Manx',
+  'Munchkin',
+  'Norwegian Forest Cat',
+  'Ocicat',
+  'Oriental',
+  'Persian',
+  'Peterbald',
+  'Pixiebob',
+  'Ragamuffin',
+  'Ragdoll',
+  'Russian Blue',
+  'Savannah',
+  'Scottish Fold',
+  'Selkirk Rex',
+  'Siamese',
+  'Siberian',
+  'Singapura',
+  'Somali',
+  'Sphynx',
+  'Tonkinese',
+  'Toyger Cat Breed',
+  'Turkish Angora',
+  'Turkish Van',
+];
+//bool isChecked = false;
+//bool isCheckedd = false;
+String dropdownValue = list.first;
+String dropdownValueCat = catList.first;
 
 class choose {
   String value;
-
+  String dog;
+  String cat;
+  bool isDog;
+  bool isCat;
+  String pet;
   choose({
     required this.value,
+    required this.dog,
+    required this.cat,
+    required this.isCat,
+    required this.isDog,
+    required this.pet,
   });
-
-  // factory TestParse.fromJson(Map<String, dynamic> json) {
-  //   return TestParse(
-  //     title: json['script'],
-  //   );
-  // }
 }
 
 void main() => runApp(const DropdownButtonApp());
 
-class DropdownButtonApp extends StatelessWidget {
+class DropdownButtonApp extends StatefulWidget {
   const DropdownButtonApp({super.key});
 
+  @override
+  State<DropdownButtonApp> createState() => _DropdownButtonAppState();
+}
+
+class _DropdownButtonAppState extends State<DropdownButtonApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -225,33 +285,93 @@ class DropdownButtonApp extends StatelessWidget {
       ),
       body: Column(children: [
         SizedBox(
-          height: 100,
+          height: 10,
         ),
-        Center(
-          child: DropdownButtonExample(),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/api');
-          },
-          child: Container(
-            color: Colors.green,
-            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-            child: const Text(
-              'Show İnfo',
-              style: TextStyle(color: Colors.white, fontSize: 13.0),
+        InkWell(
+          onTap: () {
+            setState(() {
+              newValue.pet = newValue.dog;
+              showModalBottomSheet<dynamic>(
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (BuildContext bc) {
+                    return Wrap(children: <Widget>[
+                      Container(
+                        child: Container(
+                          decoration: new BoxDecoration(
+                              borderRadius: new BorderRadius.only(
+                                  topLeft: const Radius.circular(100),
+                                  topRight: const Radius.circular(100))),
+                          child: DropdownButtonExample(),
+                        ),
+                      )
+                    ]);
+                  });
+            });
+          }, // Handle your callback.
+          splashColor: Colors.brown.withOpacity(0.5),
+          child: Ink(
+            height: 360,
+            width: 400,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/dog-png.webp'),
+                fit: BoxFit.fill,
+              ),
             ),
           ),
         ),
+        SizedBox(
+          height: 25,
+        ),
+        InkWell(
+          onTap: () {
+            setState(() {
+              newValue.pet = newValue.cat;
+              showModalBottomSheet<dynamic>(
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (BuildContext bc) {
+                    return Wrap(children: <Widget>[
+                      Container(
+                        child: Container(
+                          decoration: new BoxDecoration(
+                              borderRadius: new BorderRadius.only(
+                                  topLeft: const Radius.circular(100),
+                                  topRight: const Radius.circular(100))),
+                          child: Dropdowncat(),
+                        ),
+                      )
+                    ]);
+                  });
+              // showModalBottomSheet(
+              //     context: context, builder: (builder) => const Dropdowncat());
+            });
+          }, // Handle your callback.
+          splashColor: Colors.brown.withOpacity(0.5),
+          child: Ink(
+            height: 360,
+            width: 400,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/catNormal.png'),
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
+        )
       ]),
     );
   }
 }
 
-choose newValue = choose(value: "");
+choose newValue = choose(
+    value: "Choose",
+    cat: "Cat",
+    dog: "Dog",
+    isCat: false,
+    isDog: false,
+    pet: "");
 
 class DropdownButtonExample extends StatefulWidget {
   DropdownButtonExample({super.key});
@@ -261,32 +381,110 @@ class DropdownButtonExample extends StatefulWidget {
 }
 
 class _DropdownButtonExampleState extends State<DropdownButtonExample> {
-  String dropdownValue = list.first;
-
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<String>(
-      value: dropdownValue,
-      icon: const Icon(Icons.arrow_downward),
-      elevation: 16,
-      style: const TextStyle(color: Colors.deepPurple),
-      underline: Container(
-        height: 2,
-        color: Colors.deepPurpleAccent,
-      ),
-      onChanged: (String? value) {
-        // This is called when the user selects an item.
-        setState(() {
-          dropdownValue = value!;
-          newValue.value = dropdownValue;
-        });
-      },
-      items: list.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
+    return Column(
+      children: [
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 30),
+            child: DropdownButton<String>(
+              value: dropdownValue,
+              icon: const Icon(Icons.arrow_downward),
+              elevation: 16,
+              style: const TextStyle(color: Colors.deepPurple),
+              underline: Container(
+                height: 2,
+                color: Colors.deepPurpleAccent,
+              ),
+              onChanged: (String? value) {
+                // This is called when the user selects an item.
+                setState(() {
+                  dropdownValue = value!;
+                  newValue.value = dropdownValue;
+                });
+              },
+              items: list.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: () async {
+            dynamic send = await Navigator.pushNamed(context, '/api');
+          },
+          child: Container(
+            color: Colors.orange,
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+            child: const Text(
+              'Show İnfo',
+              style: TextStyle(color: Colors.white, fontSize: 18.0),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class Dropdowncat extends StatefulWidget {
+  const Dropdowncat({super.key});
+
+  @override
+  State<Dropdowncat> createState() => _DropdowncatState();
+}
+
+class _DropdowncatState extends State<Dropdowncat> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 30),
+            child: DropdownButton<String>(
+              value: dropdownValueCat,
+              icon: const Icon(Icons.arrow_downward),
+              elevation: 16,
+              style: const TextStyle(color: Colors.deepPurple),
+              underline: Container(
+                height: 2,
+                color: Colors.deepPurpleAccent,
+              ),
+              onChanged: (String? value) {
+                // This is called when the user selects an item.
+                setState(() {
+                  dropdownValueCat = value!;
+                  newValue.value = dropdownValueCat;
+                });
+              },
+              items: catList.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/api');
+          },
+          child: Container(
+            color: Colors.orange,
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+            child: const Text(
+              'Show İnfo',
+              style: TextStyle(color: Colors.white, fontSize: 18.0),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
